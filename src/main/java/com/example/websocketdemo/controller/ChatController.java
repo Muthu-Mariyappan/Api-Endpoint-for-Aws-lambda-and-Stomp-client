@@ -43,6 +43,7 @@ public class ChatController {
 		System.out.println("connectToStompServer called ... ");
 		
 		try {
+			
 			WebSocketClient simpleWebSocketClient = new StandardWebSocketClient();
 			List<Transport> transports = new ArrayList<>(1);
 			transports.add(new WebSocketTransport(simpleWebSocketClient));
@@ -54,31 +55,38 @@ public class ChatController {
 	        
 	        //String url = "ws://localhost:5001/ws";
 	        String url = "ws://muthu-stomp-broker-in-mem.herokuapp.com/ws";
-	        sessionHandler = new MySessionHandler();
-	        stompClient.connect(url, sessionHandler);
 	        
-	        msg = "Connection between you and Stomp server is established.";
+	        if(sessionHandler==null) {
+	        	sessionHandler = new MySessionHandler();
+	        	stompClient.connect(url, sessionHandler);
+	        	msg = "Connection between you and Stomp server is established.";
+	        }else {
+	        	msg = "Connection already exists...";
+	        }
+	        
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-        return msg;
-        
+		
+        return msg;       
 	}
 	
 	@RequestMapping(value = "/quit")
 	public String TerminateSocket(){
 		String msg = "Nothing to terminate.";
-		if(sessionHandler!=null) {
+		if(sessionHandler != null && sessionHandler.isConnected()) {
 			sessionHandler.disconnectFromServer();
+			sessionHandler = null;
 			msg = "Session to Stomp server terminated succesfully.";
 		}
 		return msg;
 	}
 	
+	
 	@RequestMapping(value = "/send")
 	public String sendMethod(){
 		String msg = "Need to establish session with /connect first.";
-		if(sessionHandler!=null) {
+		if(sessionHandler != null && sessionHandler.isConnected()) {
 			System.out.println("Base send message called");
 			sessionHandler.sendMessage();
 			msg = "Sample message sent successfully";
@@ -91,7 +99,7 @@ public class ChatController {
 		System.out.println("Base send message called with obj "+chatMessage);
 		ChatMessage cms = null;
 		String msg = "Need to establish session with /connect first.";
-		if(sessionHandler!=null) {
+		if(sessionHandler != null && sessionHandler.isConnected()) {
 			try {
 				cms = fromJsontoChatMessage(chatMessage);				
 			} catch (Exception e) {

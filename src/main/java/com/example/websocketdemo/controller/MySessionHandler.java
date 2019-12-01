@@ -31,6 +31,14 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
         System.out.println("Afterconnected finished.");
     }
 
+    public boolean isConnected() {
+    	return cSession != null;
+    }
+    
+    public StompSession getSession() {
+    	return this.cSession;
+    }
+    
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
         exception.printStackTrace();
