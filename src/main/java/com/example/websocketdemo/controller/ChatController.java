@@ -26,9 +26,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-/**
- * Created by rajeevkumarsingh on 24/07/17.
- */
 @RestController
 public class ChatController {
 
@@ -48,12 +45,11 @@ public class ChatController {
 		SockJsClient sockJsClient = new SockJsClient(transports);
 		WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
 		
-//		WebSocketClient webSocketClient = new StandardWebSocketClient();
-//        WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
         stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
         
-        String url = "ws://localhost:5001/ws";
+        //String url = "ws://localhost:5001/ws";
+        String url = "ws://muthu-stomp-broker-in-mem.herokuapp.com/ws";
         sessionHandler = new MySessionHandler();
         stompClient.connect(url, sessionHandler);        
         //new Scanner(System.in).nextLine(); //Don't close immediately.
