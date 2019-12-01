@@ -24,7 +24,6 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
         session.send("/app/chat.addUser", new ChatMessage(ChatMessage.MessageType.JOIN,"muthu","none"));
         
         System.out.println("Joined the session. Make call to /base/send");
-        //new Scanner(System.in).nextLine();
         
         System.out.println("New session: "+ session.getSessionId());
         //session.send("/app/chat.sendMessage", "{\"sender\":\"Muthu\",\"type\":\"CHAT\",\"content\":\"Message from muthu\"}");
@@ -36,14 +35,16 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
         exception.printStackTrace();
     }
-    
-    
+        
     public void sendMessage() {
     	System.out.println("Session handler send message");
-    	cSession.send("/app/chat.sendMessage", new ChatMessage(ChatMessage.MessageType.CHAT,"muthu","Message"));
-    	
+    	cSession.send("/app/chat.sendMessage", new ChatMessage(ChatMessage.MessageType.CHAT,"muthu","Message"));    	
     }
     
+    public void sendMessage(ChatMessage chatMessage) {
+    	System.out.println("Message received from client : "+chatMessage);
+    	cSession.send("/app/chat.sendMessage", chatMessage);   	
+    }
     
     @Override
     public Type getPayloadType(StompHeaders headers) {
