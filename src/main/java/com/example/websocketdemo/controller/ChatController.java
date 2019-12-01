@@ -31,49 +31,82 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ChatController {
 
 	private MySessionHandler sessionHandler;
+
 	public ChatController() {
 		
 	}
 	
-	@RequestMapping(value = "/base")
-	public void testmethod(){
+	@RequestMapping(value = "/connect")
+	public String connectToStompServer(){
 		
-		System.out.println("base called");
+		String msg = "Failed to establish a sesssion";
+		System.out.println("connectToStompServer called ... ");
 		
-		WebSocketClient simpleWebSocketClient = new StandardWebSocketClient();
-		List<Transport> transports = new ArrayList<>(1);
-		transports.add(new WebSocketTransport(simpleWebSocketClient));
-		SockJsClient sockJsClient = new SockJsClient(transports);
-		WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
-		
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
-        
-        //String url = "ws://localhost:5001/ws";
-        String url = "ws://muthu-stomp-broker-in-mem.herokuapp.com/ws";
-        sessionHandler = new MySessionHandler();
-        stompClient.connect(url, sessionHandler);        
-        //new Scanner(System.in).nextLine(); //Don't close immediately.
-        
-	}
-	
-	@RequestMapping(value = "/base/send")
-	public void sendMethod(){
-		System.out.println("Base send message called");
-		sessionHandler.sendMessage();
-	}
-	
-	@RequestMapping(value = "/base/sendjson", method = RequestMethod.POST)
-	public void sendMethodWithJson(@RequestBody String chatMessage) throws ParseException{
-		System.out.println("Base send message called with obj "+chatMessage);
-		ChatMessage cms = null;
 		try {
-			cms = fromJsontoChatMessage(chatMessage);
-		} catch (Exception e) {
+			WebSocketClient simpleWebSocketClient = new StandardWebSocketClient();
+			List<Transport> transports = new ArrayList<>(1);
+			transports.add(new WebSocketTransport(simpleWebSocketClient));
+			SockJsClient sockJsClient = new SockJsClient(transports);
+			
+			WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
+			stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+	        stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
+	        
+	        String url = "ws://localhost:5001/ws";
+	        //String url = "ws://muthu-stomp-broker-in-mem.herokuapp.com/ws";
+	        sessionHandler = new MySessionHandler();
+	        stompClient.connect(url, sessionHandler);
+	        
+	        msg = "Connection between you and Stomp server is established.";
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Base parsed message ");
-		sessionHandler.sendMessage(cms);
+        return msg;
+        
+	}
+	
+	@RequestMapping(value = "/quit")
+	public String TerminateSocket(){
+		String msg = "Nothing to terminate.";
+		if(sessionHandler!=null) {
+			sessionHandler.disconnectFromServer();
+			msg = "Session to Stomp server terminated succesfully.";
+		}
+		return msg;
+	}
+	
+	@RequestMapping(value = "/send")
+	public String sendMethod(){
+		String msg = "Need to establish session with /connect first.";
+		if(sessionHandler!=null) {
+			System.out.println("Base send message called");
+			sessionHandler.sendMessage();
+			msg = "Sample message sent successfully";
+		}
+		return msg;
+	}
+	
+	@RequestMapping(value = "/sendjson", method = RequestMethod.POST)
+	public String sendMethodWithJson(@RequestBody String chatMessage) throws ParseException{
+		System.out.println("Base send message called with obj "+chatMessage);
+		ChatMessage cms = null;
+		String msg = "Need to establish session with /connect first.";
+		if(sessionHandler!=null) {
+			try {
+				cms = fromJsontoChatMessage(chatMessage);				
+			} catch (Exception e) {
+				e.printStackTrace();
+				msg = "Invalid message format.";
+			}
+			System.out.println("Base parsed message ");
+			try {
+				sessionHandler.sendMessage(cms);
+				msg = "Message sent. Message is "+cms;
+			}catch(Exception e) {
+				msg = "Server error. Failed to send message";
+			}
+		}
+		return msg;
 	}
 	
 	public ChatMessage fromJsontoChatMessage(String json) throws JsonParseException, JsonMappingException, IOException{

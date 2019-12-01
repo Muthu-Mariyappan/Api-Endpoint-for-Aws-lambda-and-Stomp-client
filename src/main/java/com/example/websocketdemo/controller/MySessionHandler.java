@@ -41,7 +41,12 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     	cSession.send("/app/chat.sendMessage", new ChatMessage(ChatMessage.MessageType.CHAT,"muthu","Message"));    	
     }
     
-    public void sendMessage(ChatMessage chatMessage) {
+    public void disconnectFromServer() {
+    	System.out.println("Disconnect called...");
+    	cSession.disconnect(); 	
+    }
+    
+    public void sendMessage(ChatMessage chatMessage)throws Exception {
     	System.out.println("Message received from client : "+chatMessage);
     	cSession.send("/app/chat.sendMessage", chatMessage);   	
     }
