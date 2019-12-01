@@ -52,8 +52,8 @@ public class ChatController {
 			stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 	        stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
 	        
-	        String url = "ws://localhost:5001/ws";
-	        //String url = "ws://muthu-stomp-broker-in-mem.herokuapp.com/ws";
+	        //String url = "ws://localhost:5001/ws";
+	        String url = "ws://muthu-stomp-broker-in-mem.herokuapp.com/ws";
 	        sessionHandler = new MySessionHandler();
 	        stompClient.connect(url, sessionHandler);
 	        
