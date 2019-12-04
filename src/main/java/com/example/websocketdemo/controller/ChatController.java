@@ -30,9 +30,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 public class ChatController {
 
+	private final String LambdaSenderName;
 	private MySessionHandler sessionHandler;
 
 	public ChatController() {
+		this.LambdaSenderName = "Shika";
 		
 	}
 	
@@ -54,7 +56,7 @@ public class ChatController {
 	        stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
 	        
 	        //String url = "ws://localhost:5001/ws";
-	        String url = "ws://muthu-stomp-broker-in-mem.herokuapp.com/ws";
+	        String url = "ws://gmm-stomp-broker-in-mem.herokuapp.com/ws";
 	        
 	        if(sessionHandler==null) {
 	        	sessionHandler = new MySessionHandler();
@@ -98,10 +100,12 @@ public class ChatController {
 	public String sendMethodWithJson(@RequestBody String chatMessage) throws ParseException{
 		System.out.println("Base send message called with obj "+chatMessage);
 		ChatMessage cms = null;
+		String sender = null;
 		String msg = "Need to establish session with /connect first.";
 		if(sessionHandler != null && sessionHandler.isConnected()) {
 			try {
-				cms = fromJsontoChatMessage(chatMessage);				
+				cms = fromJsontoChatMessage(chatMessage);		
+				sender = cms.getSender();
 			} catch (Exception e) {
 				e.printStackTrace();
 				msg = "Invalid message format.";
