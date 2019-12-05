@@ -120,7 +120,9 @@ public class ChatController {
 						case "GOD_LOC":
 							switch(cmdInfo.getQualifier()) {
 								case "CURR":
-									ChatMessage chatMes = new ChatMessage(ChatMessage.MessageType.CHAT,"GMMSENDER","{\"CMD\":\"GOD_LOC\",\"QUALIFIER\":\"CURR_LOC\",\"Data\":\"None\" }");
+									ObjectMapper mapper = new ObjectMapper();
+									mapper.writeValueAsString(new CommandInfo("GOD_LOC","CURR","10.074951,78.213087"));
+									ChatMessage chatMes = new ChatMessage(ChatMessage.MessageType.CHAT,"GMMSERVER",mapper.writeValueAsString(new CommandInfo("GOD_LOC","CURR","10.074951,78.213087")));
 									sessionHandler.sendMessage(chatMes);
 									break;
 								case "PREV":
