@@ -21,7 +21,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     	cSession = session;
     	
     	session.subscribe("/topic/public", this);
-        session.send("/app/chat.addUser", new ChatMessage(ChatMessage.MessageType.JOIN,"muthu","none"));
+        session.send("/app/chat.addUser", new ChatMessage(ChatMessage.MessageType.JOIN,"GMMSERVER","none"));
         
         System.out.println("Joined the session. Make call to /base/send");
         
@@ -46,7 +46,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
         
     public void sendMessage() {
     	System.out.println("Session handler send message");
-    	cSession.send("/app/chat.sendMessage", new ChatMessage(ChatMessage.MessageType.CHAT,"muthu","Message"));    	
+    	cSession.send("/app/chat.sendMessage", new ChatMessage(ChatMessage.MessageType.CHAT,"GMMSERVER","Message"));    	
     }
     
     public void disconnectFromServer() {
