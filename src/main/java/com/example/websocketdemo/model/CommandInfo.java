@@ -24,7 +24,11 @@ public class CommandInfo {
 		Qualifier = qualifier;
 	}
 	
-	public CommandInfo(String command,String Data,String qualifier) {
+	public CommandInfo() {
+		
+	}
+	
+	public CommandInfo(String command,String qualifier,String Data) {
 		this.command = command;
 		this.Data = Data;
 		this.Qualifier = qualifier;

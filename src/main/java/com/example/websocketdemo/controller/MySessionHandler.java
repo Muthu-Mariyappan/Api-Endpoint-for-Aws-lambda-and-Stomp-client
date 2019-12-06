@@ -6,6 +6,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import com.example.websocketdemo.model.ChatMessage;
+import com.example.websocketdemo.model.MyConstants;
 
 import java.lang.reflect.Type;
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     	cSession = session;
     	
     	session.subscribe("/topic/public", this);
-        session.send("/app/chat.addUser", new ChatMessage(ChatMessage.MessageType.JOIN,"GMMSERVER","none"));
+        session.send("/app/chat.addUser", new ChatMessage(ChatMessage.MessageType.JOIN,MyConstants.StompServer,"none"));
         
         System.out.println("Joined the session. Make call to /base/send");
         
@@ -46,7 +47,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
         
     public void sendMessage() {
     	System.out.println("Session handler send message");
-    	cSession.send("/app/chat.sendMessage", new ChatMessage(ChatMessage.MessageType.CHAT,"GMMSERVER","Message"));    	
+    	cSession.send("/app/chat.sendMessage", new ChatMessage(ChatMessage.MessageType.CHAT,MyConstants.StompServer,"Message"));    	
     }
     
     public void disconnectFromServer() {
@@ -54,7 +55,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     	cSession.disconnect(); 	
     }
     
-    public void sendMessage(ChatMessage chatMessage)throws Exception {
+    public void sendMessage(ChatMessage chatMessage){
     	System.out.println("Message received from client : "+chatMessage);
     	cSession.send("/app/chat.sendMessage", chatMessage);   	
     }
