@@ -68,7 +68,7 @@ public class ChatController {
 				e.printStackTrace();
 			}
 			
-        	CommandInfo commandInfo = new CommandInfo("JOURNEY","GOD",result);
+        	CommandInfo commandInfo = new CommandInfo("GOD_LOC","CURR",result);
         	ChatMessage chatMessage = new ChatMessage(ChatMessage.MessageType.CHAT,MyConstants.StompServer,convertToJSON(commandInfo));
         	
         	//ChatMessage bigMess = new ChatMessage(ChatMessage.MessageType.CHAT,MyConstants.StompServer,"biggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggMessssssssssssssssssssssssssssssssssssssssssssssssssssssssageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
@@ -84,6 +84,7 @@ public class ChatController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
         	CommandInfo commandInfo = new CommandInfo("ALLDATA","NONE",result);
         	ChatMessage chatMessage = new ChatMessage(ChatMessage.MessageType.CHAT,MyConstants.StompServer,convertToJSON(commandInfo));
         	
