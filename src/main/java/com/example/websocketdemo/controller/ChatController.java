@@ -160,7 +160,7 @@ public class ChatController {
 			stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 	        stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
 
-	        String url = MyConstants.BrokerURL;
+	        String url = MyConstants.lBrokerURL;
 	        //String url = "ws://gmm-stomp-broker-in-mem.herokuapp.com/ws";
 	        
 	        if(sessionHandler==null) {
@@ -210,8 +210,7 @@ public class ChatController {
 		System.out.println("Base send message called with obj "+chatMessage);
 		ChatMessage cms = null;
 		CommandInfo cmdInfo = null;
-		String resultToReturn = "Sorry";
-		String sender = null;
+
 		String msg = "Need to establish session with /connect first.";
 		if(sessionHandler != null && sessionHandler.isConnected()) {
 			
@@ -274,10 +273,25 @@ public class ChatController {
 									break;
 							}
 							break;
-						case "Bins":
+						case "BINS":
 							switch(cmdInfo.getQualifier()){
 								case "SHOW_FILLED":
-									//showCamera(id);
+									ObjectMapper mapper = new ObjectMapper();
+									String result = httpHelper.sendGet(MyConstants.SimBaseURL+MyConstants.getassetsbyvaluegreater.replace("type", "1").replace("rvalue", "75"));
+									Place places[] = mapper.readValue(result, Place[].class);
+									
+									String filledBinNames ="";
+									int count = 0;
+									for(Place place:places) {
+										count++;
+										filledBinNames += place.getName()+", ";
+									}
+									
+									List<String> detail = new ArrayList<>();
+									detail.add(count+"");
+									detail.add(filledBinNames);
+									msg = mapper.writeValueAsString(detail);
+									//msg = filledBinNames;
 									break;
 							}
 							break;
@@ -293,7 +307,7 @@ public class ChatController {
 						
 					}
 				}
-				sender = cms.getSender();
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				msg = "Invalid message format.";
