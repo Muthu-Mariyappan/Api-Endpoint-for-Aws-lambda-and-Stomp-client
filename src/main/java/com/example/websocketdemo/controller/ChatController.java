@@ -160,7 +160,7 @@ public class ChatController {
 			stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 	        stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
 
-	        String url = MyConstants.lBrokerURL;
+	        String url = MyConstants.BrokerURL;
 	        //String url = "ws://gmm-stomp-broker-in-mem.herokuapp.com/ws";
 	        
 	        if(sessionHandler==null) {
