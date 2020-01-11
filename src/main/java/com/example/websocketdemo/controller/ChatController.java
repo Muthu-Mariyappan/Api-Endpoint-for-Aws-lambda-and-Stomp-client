@@ -54,7 +54,7 @@ public class ChatController {
 	private ScheduledExecutorService ses[] = new ScheduledExecutorService[3];
 	
 	@RequestMapping(value = "/schedule/start")
-	public void scheduleCall() throws InterruptedException {
+	public String scheduleCall() throws InterruptedException {
 		
 		ses[0] = Executors.newScheduledThreadPool(2);
 		//ses[1] = Executors.newScheduledThreadPool(2);
@@ -109,6 +109,7 @@ public class ChatController {
         scheduledFuture[0] = ses[0].scheduleAtFixedRate(God, 0, 5, TimeUnit.SECONDS);
         //scheduledFuture[1] = ses[1].scheduleAtFixedRate(Security, 3, 5, TimeUnit.SECONDS);
         //scheduledFuture[2] = ses[2].scheduleAtFixedRate(Ambulance, 6, 5, TimeUnit.SECONDS);
+        return "Streaming locations....";
 	}
 	
 	private String convertToJSON(Object object) {
@@ -124,13 +125,14 @@ public class ChatController {
 	}
 	
 	@RequestMapping(value = "/schedule/cancel")
-	public void cancelScheduleCall() throws InterruptedException {
+	public String cancelScheduleCall() throws InterruptedException {
 		scheduledFuture[0].cancel(true);
 		//scheduledFuture[1].cancel(true);
 		//scheduledFuture[2].cancel(true);
         ses[0].shutdown();
         //ses[1].shutdown();
         //ses[2].shutdown();
+        return "Locations stream stopped..";
 	}
 	
 	@RequestMapping(value = "/server/get")
@@ -159,8 +161,8 @@ public class ChatController {
 			WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
 			stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 	        stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
-
-	        String url = MyConstants.BrokerURL;
+	        
+	        String url = MyConstants.lBrokerURL;
 	        //String url = "ws://gmm-stomp-broker-in-mem.herokuapp.com/ws";
 	        
 	        if(sessionHandler==null) {
@@ -207,6 +209,7 @@ public class ChatController {
 	
 	@RequestMapping(value = "/sendjson", method = RequestMethod.POST)
 	public String sendMethodWithJson(@RequestBody String chatMessage) throws ParseException{
+		
 		System.out.println("Base send message called with obj "+chatMessage);
 		ChatMessage cms = null;
 		CommandInfo cmdInfo = null;

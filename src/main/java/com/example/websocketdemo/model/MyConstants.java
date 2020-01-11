@@ -5,8 +5,7 @@ public class MyConstants {
 	public static String SimulatorUrl = "https://say-hello-gmm.herokuapp.com/sayhello?name=muthu";
 	//public static String SimulatorUrl = "http://wingpsapps.southeastasia.cloudapp.azure.com/bustall/getallassets";
 	
-	
-	public static String SimBaseURL = "http://wingpsapps.southeastasia.cloudapp.azure.com/bustall";
+	public static String SimBaseURL = "http://muthu-budev.eastus.cloudapp.azure.com:8080/bustall";
 	public static String getassetsbyvaluegreater = "/getassetsbyvaluegreater/type/rvalue";
 	public static String getassetsbyvaluesmaller = "/getassetsbyvaluesmaller/type/rvalue";		
 	public static String getallassets = "/getallassets";
