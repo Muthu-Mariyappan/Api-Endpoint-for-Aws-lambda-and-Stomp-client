@@ -317,7 +317,7 @@ public class ChatController {
 			}
 			
 			System.out.println("Base parsed message ");
-			
+			System.out.println("response given is "+msg);
 		}
 		return msg;
 	}
